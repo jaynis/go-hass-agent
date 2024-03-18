@@ -1,5 +1,175 @@
 # Changelog
 
+## [5.1.2](https://github.com/jaynis/go-hass-agent/compare/v7.2.0...v5.1.2) (2024-03-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **dbusx:** The dbusx package now uses Go generics for some functions, to combine both fetching or setting a value or property as the required type.
+* Major refactor of requests code with internal breaking changes. Migrate from `requests` package to `resty` package. This allows exposing more details about the response from Home Assistant, providing cleaner response handling code. In addition, refactor code to migrate tracker and request code into the hass package, keeping the sensor code as a distinct package for now.
+* Legacy agent config package has been removed and replaced with preferences package. This breaks upgrades from all versions besides the last release in the previous major version series. **Users upgrading from older releases should first upgrade to the latest version of the last major release before this release, then upgrade to this release.**
+* **agent:** drop upgrade support for versions < 3.0.0
+* **dbushelpers:** improve code safety and logic
+* **agent,linux:** return a channel for sensor updates from updater funcs
+
+### Features
+
+* :alembic: add ability to run a trace/heap/cpu profile over execution lifetime ([9b73cd8](https://github.com/jaynis/go-hass-agent/commit/9b73cd8094159788f9bd14d95037bbd0a96deab4))
+* :recycle: rework sensor registry to abstract from sensor tracker ([a88a04a](https://github.com/jaynis/go-hass-agent/commit/a88a04a9ab73cf918761cb7c42d75dda43e58eea))
+* :sparkles: major config rewrite ([680bee1](https://github.com/jaynis/go-hass-agent/commit/680bee1b074c4a65fee4f2312b8003a5129148c4))
+* **agent:** :arrow_up: update for latest go-hass-anything ([db884fe](https://github.com/jaynis/go-hass-agent/commit/db884fe25c249e21fb5a19e91a4ed1b3e3dfcc69))
+* **agent:** :art: MQTT agent adjustments ([b094c4a](https://github.com/jaynis/go-hass-agent/commit/b094c4a081db82c628e72097f8bacc4c039ffa50))
+* **agent:** :fire: remove unused and unnecessary info command ([dcc0a31](https://github.com/jaynis/go-hass-agent/commit/dcc0a316e4b62b881da1eef3f30810f196ca57e8))
+* **agent:** :sparkles: add agent reset command ([853ee60](https://github.com/jaynis/go-hass-agent/commit/853ee60449a41213e0784b23687d0cd1f7ecdb74))
+* **agent:** :sparkles: add error types for use by config code ([961f98f](https://github.com/jaynis/go-hass-agent/commit/961f98f73f3591691d6ceb1d36ecd7dd49cb8a94))
+* **agent:** :sparkles: add support for screensaver control under Xfce desktop ([78e560c](https://github.com/jaynis/go-hass-agent/commit/78e560c86244189fd5f82a58b830a8702d327893))
+* **agent:** :sparkles: add suspend and hibernate control via MQTT ([f1678ea](https://github.com/jaynis/go-hass-agent/commit/f1678ea83a03dfe32460e7eddd958d16a7e2d8a4))
+* **agent:** :sparkles: Allow embedding config interface in context ([058950d](https://github.com/jaynis/go-hass-agent/commit/058950d91e580d5eb2ece9d57589bcab87650497))
+* **agent:** :sparkles: allow overriding URL for API requests ([3d1c9d9](https://github.com/jaynis/go-hass-agent/commit/3d1c9d9d1c266d315e5418deeaa5a16928255432))
+* **agent:** :sparkles: control the agent via MQTT ([5756092](https://github.com/jaynis/go-hass-agent/commit/5756092f3b76f3cd2ec10e24d6bdf85c38f767bf))
+* **agent:** :sparkles: map mqtt settings to go-hass-agent package settings ([a3dee24](https://github.com/jaynis/go-hass-agent/commit/a3dee246feb333a2e3edcb5e25d3e118bccd110f))
+* **agent:** :sparkles: set the auto-detected server to a default value for convienience ([f39ef5b](https://github.com/jaynis/go-hass-agent/commit/f39ef5b0b1c0d99eb612fff0e473c374e5254fad))
+* **agent:** :zap: simplify config upgrade and validation process ([7fcf14b](https://github.com/jaynis/go-hass-agent/commit/7fcf14bdc8087d8760ce88f9137eea4c72e78457))
+* **agent:** add script sensors ([ece4ddd](https://github.com/jaynis/go-hass-agent/commit/ece4ddda986179000cf4f423286bafb2a732f9d9))
+* **agent:** arbitrary dbus commands via MQTT (thanks [@jaynis](https://github.com/jaynis)!) ([7204181](https://github.com/jaynis/go-hass-agent/commit/7204181b746ee9602f83af02ef428cf98ed37a60))
+* **agent:** drop upgrade support for versions &lt; 3.0.0 ([a33167e](https://github.com/jaynis/go-hass-agent/commit/a33167e297ebcf253520f42692a92695816e246d))
+* **cmd,agent:** :sparkles: agent rework ([8ab63e2](https://github.com/jaynis/go-hass-agent/commit/8ab63e2b9ff128f7ed887be0b37f7aff22a35e6d))
+* **cmd:** :art: move long command descriptions to embedded text files ([58c2305](https://github.com/jaynis/go-hass-agent/commit/58c2305b776057a5f4ce0e3c7f945d230d746c23))
+* **cmd:** auto-detect whether to run in headless mode or not ([7c77032](https://github.com/jaynis/go-hass-agent/commit/7c77032ee9eb4b3b705944ed4c921b4f44cb213d))
+* **config:** :sparkles: Export an AppURL config option ([0076019](https://github.com/jaynis/go-hass-agent/commit/0076019e15c67aede3ad6d80f156102deb0ea020))
+* **dbushelpers:** improve code safety and logic ([c033587](https://github.com/jaynis/go-hass-agent/commit/c033587bdf66783fb01c3452eb9980259518d146))
+* **dbushelpers:** simpler signal removal logic ([b185320](https://github.com/jaynis/go-hass-agent/commit/b1853203e366f322339bee42e5d01d8a60082069))
+* **dbusx:** use generics to simplify dbusx usage ([45335c4](https://github.com/jaynis/go-hass-agent/commit/45335c4cf5b761bd4fd1789d6fe154cb644f95f6))
+* **device:** :sparkles: migrate external ip checker to resty package ([4894fef](https://github.com/jaynis/go-hass-agent/commit/4894fefe72b1e4894832276545ff2629e49ce392))
+* **hass:** :sparkles: API response rewrite ([a979728](https://github.com/jaynis/go-hass-agent/commit/a979728ee48ed7cf1bdfb6671fe7b2c7935edf2b))
+* **hass:** :sparkles: new functions to retrieve entities from Home Assistant ([a3d0fc6](https://github.com/jaynis/go-hass-agent/commit/a3d0fc66c500f77d9ed2442a237669dfb91b6545))
+* **hass:** :sparkles: utilise new ExecuteRequest function ([dff2e83](https://github.com/jaynis/go-hass-agent/commit/dff2e835fc42594a8b5523f5d2f4e5cb2ec2c86d))
+* **hass/api:** rework sensor response parsing to simplify code ([bc935e5](https://github.com/jaynis/go-hass-agent/commit/bc935e5d649d8f0fb1a584aeb721204ba36dde97))
+* **linux:** :sparkles: add CPU Usage % sensor ([6fdb91b](https://github.com/jaynis/go-hass-agent/commit/6fdb91be740542ae2c7c35c89f65b3bf6c417bff))
+* **linux:** :sparkles: add memory and swap usage % sensors ([3a7ca08](https://github.com/jaynis/go-hass-agent/commit/3a7ca08ed36d6e2338fe3ab79d6037879a67c4fe))
+* **linux:** :sparkles: switch to using hwmon package to get hardware sensors ([a8360c2](https://github.com/jaynis/go-hass-agent/commit/a8360c2c7408e8272725f52580059a49c11bb4ac))
+* **linux/hwmon:** :sparkles: add a hwmon package to retrieve all hardware sensors from the kernel ([cf50826](https://github.com/jaynis/go-hass-agent/commit/cf508266438a70c8545ed64e5ae921484cdde993))
+* **linux/hwmon:** :sparkles: add an example usage ([174840f](https://github.com/jaynis/go-hass-agent/commit/174840f1334305d9b858df9834e2bed7717f212a))
+* **linux/hwmon:** :sparkles: add units output to sensors ([8663945](https://github.com/jaynis/go-hass-agent/commit/8663945f4c69c7573d0ab6ae42d9916b843ead46))
+* **linux/hwmon:** :sparkles: apply appropriate scale to sensor values ([bdf3e82](https://github.com/jaynis/go-hass-agent/commit/bdf3e8252a887a1b900f88c45b499b2735e42f16))
+* **linux/hwmon:** :sparkles: expose sensor type ([ad970be](https://github.com/jaynis/go-hass-agent/commit/ad970be87753013af7610646ae740bb012584e33))
+* **linux:** add sensors for tracking shutdown/suspend state via D-Bus ([cbcb8b5](https://github.com/jaynis/go-hass-agent/commit/cbcb8b516743013f2596bd93c1c3ccd6f6692eae))
+* **linux:** change power management sensor to power state sensor ([820a23f](https://github.com/jaynis/go-hass-agent/commit/820a23f8fa9d09657fefa71d5b2fd6a9d7e4b583))
+* **linux:** monitor for battery devices being added/removed ([bde0b2e](https://github.com/jaynis/go-hass-agent/commit/bde0b2ea43d4be530665cef3837b0201daa94bb4))
+* **linux:** network transfer rate sensors ([851b517](https://github.com/jaynis/go-hass-agent/commit/851b517eb20f27929f1eec42cedb750276de3317))
+* **linux:** rework network connections sensor code ([a6f8dfb](https://github.com/jaynis/go-hass-agent/commit/a6f8dfbb51925d48d99a384785352cc780ae361a))
+* remove config and replace with preferences ([630d4e6](https://github.com/jaynis/go-hass-agent/commit/630d4e61c074c9d3bf10de23b9bc77eaa0715ae5))
+* **scripts:** support TOML output ([2a67c32](https://github.com/jaynis/go-hass-agent/commit/2a67c32d2dbdfd38ede23679220aa19681a3dad4))
+* **tracker:** log a warning if an unknown sensor has been sent ([09604b2](https://github.com/jaynis/go-hass-agent/commit/09604b2997de1850f8c873c77113ed34e9a6e907))
+* **ui,agent,config:** :sparkles: UI overhaul ([ded576b](https://github.com/jaynis/go-hass-agent/commit/ded576b44825e9f5d64494440af3bc99afe58ce0))
+* **ui:** :lipstick: show dialogs for success/failure of saving preferences ([a2ab9c2](https://github.com/jaynis/go-hass-agent/commit/a2ab9c25b768246f0b4432d7f7308c9bb5414b51))
+* **ui:** :sparkles: show extra details in about window ([e8277cc](https://github.com/jaynis/go-hass-agent/commit/e8277cc4ff2526bfb6155f918e618050a5a55372))
+* **vscode:** :sparkles: add additional conventional commit scopes ([b7d439c](https://github.com/jaynis/go-hass-agent/commit/b7d439c2eb86d935fa1343c98937bf6e4e8688c9))
+
+
+### Bug Fixes
+
+* :bug: registration flow for new install ([f71d7c6](https://github.com/jaynis/go-hass-agent/commit/f71d7c61f0deb96842b2f6d99b93290fb6c5c5af))
+* :sparkles: log file name set in cmd package ([11c4dd1](https://github.com/jaynis/go-hass-agent/commit/11c4dd1a73c52a2438547b6289215350d1b7767e))
+* :zap: only retry if the server is overloaded by default ([23f214f](https://github.com/jaynis/go-hass-agent/commit/23f214f4aaa1bea6908598af9db56705f43f80eb))
+* **agent,hass:** :bug: fix registration flow ([486890c](https://github.com/jaynis/go-hass-agent/commit/486890cf57724725941b9e98844b5365efc599cd))
+* **agent:** :art: device context abstraction ([878438b](https://github.com/jaynis/go-hass-agent/commit/878438b3920bb5cf20567a9a670001546e86cdf4))
+* **agent:** :bug: check for mqtt enabled ([8c2e5f0](https://github.com/jaynis/go-hass-agent/commit/8c2e5f065051ad90fcaa2ba7ac1a825d5f74f991))
+* **agent:** :bug: correct D-Bus path for Xfce screensaver control ([9650059](https://github.com/jaynis/go-hass-agent/commit/9650059e1f34e5310e3400cc5dd94a638eeee900))
+* **agent:** :bug: correct registration logic ([569091d](https://github.com/jaynis/go-hass-agent/commit/569091d2c74f8388439b851e260c85f6bd978e0b))
+* **agent:** :bug: fix race condition where agent exits before workers start ([1976238](https://github.com/jaynis/go-hass-agent/commit/1976238d1835fcf336bf991d567ae5c7cf910ced))
+* **agent:** :bug: load preferences from file to get MQTT preferences ([6f92a75](https://github.com/jaynis/go-hass-agent/commit/6f92a7572da11d7bf1bde2b6f277268a58f5b3b2))
+* **agent:** :bug: pass appropriate context to runners ([d96a4e5](https://github.com/jaynis/go-hass-agent/commit/d96a4e55bfdb489bc41d1874012e490ec0dd1fa4))
+* **agent:** :building_construction: wrap workers, scripts and notifications in goroutine with waitgroup ([e593dff](https://github.com/jaynis/go-hass-agent/commit/e593dff2f936eeccff721eff9818dff5321244df))
+* **agent:** :recycle: clean up context creation in agent ([cad5d56](https://github.com/jaynis/go-hass-agent/commit/cad5d561f7c2f2dde6ccfa149a7d2ce933e6c4f5))
+* **agent:** better logging around finding scripts ([bcf41f9](https://github.com/jaynis/go-hass-agent/commit/bcf41f919ef34c12fdbfa785dec2e12bb6b7b7b9))
+* **agent:** improve warning messages about windowing/UI environment ([222c3ab](https://github.com/jaynis/go-hass-agent/commit/222c3abe2b672ddc29c8d49910d2e4f280ad8e5a))
+* **agent:** remove unused app settings for MQTT for now ([274d4dc](https://github.com/jaynis/go-hass-agent/commit/274d4dcf69d8715194ec6333454ca4df571c8737))
+* **config:** :bug: handle mqtt config migration quirk ([c4824f3](https://github.com/jaynis/go-hass-agent/commit/c4824f36bc4c3cfc917861c80c408a1598c95ab7))
+* **container:** ensure agent runs as a non-privleged user inside a container ([1a3168f](https://github.com/jaynis/go-hass-agent/commit/1a3168f45fc218ebabd5a68dd9f37171bc10cd86))
+* **dbushelpers:** adjust logging levels for soft errors ([1966408](https://github.com/jaynis/go-hass-agent/commit/1966408be6ab5226ea89e92199270eae7f9b2601))
+* **dbushelpers:** remove not useful debug log messages ([a78118c](https://github.com/jaynis/go-hass-agent/commit/a78118cb20b2751fc3481e3b7e69f8faea70a751))
+* **dbusx:** :bug: avoid nil pointer access when busRequest exists but bus conn doesn't ([6f69316](https://github.com/jaynis/go-hass-agent/commit/6f69316d0540ce05aa882281bc3bdf63c4111903))
+* **device:** :bug: remove spew ([8b81d77](https://github.com/jaynis/go-hass-agent/commit/8b81d77c37d58568933da5924868e4d35caa49a0))
+* **hass:** :bug: ensure registry directory is created if it does not exist ([e33a4d4](https://github.com/jaynis/go-hass-agent/commit/e33a4d4bc0b8455e017ebfc18553f47823650da2))
+* **hass:** :bug: fix naming of device class values presented to Home Assistant ([ad4a73a](https://github.com/jaynis/go-hass-agent/commit/ad4a73a0648d122cf1a7b97ba05f03771b1e19d8))
+* **hass:** :bug: handle APIError or HTTP Error response more gracefully ([68b18dc](https://github.com/jaynis/go-hass-agent/commit/68b18dc016cf4335a8b50751c757096b1cf0cd11))
+* **hass:** :bug: handle uunknown error ([103ebeb](https://github.com/jaynis/go-hass-agent/commit/103ebebf4445fe07ceed46af792395324fa690df))
+* **hass:** :bug: support string or int code return for API errors ([c0ebed7](https://github.com/jaynis/go-hass-agent/commit/c0ebed7a7b260f713089e01e3b4d1efc7e971165))
+* **hass:** :lock: don't show the URL in trace logging output ([aac3ef8](https://github.com/jaynis/go-hass-agent/commit/aac3ef83245e6bdb8146a58661fd5d09bf8f7da3))
+* **hass:** :zap: increase request timeout to a more realistic time to wait for requests to complete ([4a48ab3](https://github.com/jaynis/go-hass-agent/commit/4a48ab31f4e856771bedb31e608bd530db78cad9))
+* **hass:** better handling of potential nil values ([71667e7](https://github.com/jaynis/go-hass-agent/commit/71667e750da753ccb0ba610267fdf78eb6c402ed))
+* **linux,agent:** spelling of PowerProfileUpdater function ([f5a63b8](https://github.com/jaynis/go-hass-agent/commit/f5a63b88bdb100d12a0e748da5174cc8dce8edaa))
+* **linux:** :sparkles: ensure sensors have appropriate icon, device class and state class ([1756f2c](https://github.com/jaynis/go-hass-agent/commit/1756f2c2601578f5a9524e5c68aab392dcd231d6))
+* **linux:** :sparkles: support new sensor types exposed via hwmon ([eadacba](https://github.com/jaynis/go-hass-agent/commit/eadacba7ac4e8c69153a0292732e844b267a36e0))
+* **linux/dbusx:** :bug: check nil struct not attribute ([ed4d3be](https://github.com/jaynis/go-hass-agent/commit/ed4d3bef0275f78d96376d96e083c7260c82ac2c))
+* **linux/hwmon:** :bug: remove race condition when fetching sensors ([1262c3f](https://github.com/jaynis/go-hass-agent/commit/1262c3f46a8907f04aa83fa0ab0aa02b2d769707))
+* **linux/hwmon:** :sparkles: expose alarm and intrusion as separate sensors ([5e19a48](https://github.com/jaynis/go-hass-agent/commit/5e19a48ed7312c644446291f5fbb52edc667cbf4))
+* **linux/hwmon:** :zap: improve hwmon code ([dee17e4](https://github.com/jaynis/go-hass-agent/commit/dee17e43a26e66ff9dde92f4c41a0abba2c213d3))
+* **linux/hwmon:** :zap: reduce struct memory usage ([3f452f6](https://github.com/jaynis/go-hass-agent/commit/3f452f65e004b4adec67f8a7ccb9cdeffebeed6b))
+* **linux:** add datasource to network transfer rates sensors ([043c8a4](https://github.com/jaynis/go-hass-agent/commit/043c8a437c7d6a1021a42137a282d90e9e1fc3c8))
+* **linux:** adjust log levels for some messages ([514bf31](https://github.com/jaynis/go-hass-agent/commit/514bf3121de74fdb371f04b7f7712661e17cb717))
+* **linux:** adjust power state D-Bus watch ([d1eefeb](https://github.com/jaynis/go-hass-agent/commit/d1eefeb9e65882ffa137be0c0d89e537a8836f4c))
+* **linux:** alternative approach to tracking screen lock state ([be67e53](https://github.com/jaynis/go-hass-agent/commit/be67e5381912868d0fe9a91d45fdf374bcbdaf33))
+* **linux:** batterySensor should inherit linuxSensor ([f1d09ca](https://github.com/jaynis/go-hass-agent/commit/f1d09ca9e3a4361238b445e0c2c9837905dcb1bf))
+* **linux:** better check for no address for connection ([6c66a67](https://github.com/jaynis/go-hass-agent/commit/6c66a67b53aea674823902d60fd7cd0facacdf9b))
+* **linux:** better detection of screenlock D-Bus signal ([fe10af0](https://github.com/jaynis/go-hass-agent/commit/fe10af033c83560b2c15f1c1d5bf58046ed9ab7c))
+* **linux:** better naming of battery sensors ([e5f67a1](https://github.com/jaynis/go-hass-agent/commit/e5f67a14521a95a5308d6c929d9631c34dc59d4e))
+* **linux:** capture more possible screen lock events ([775a9ab](https://github.com/jaynis/go-hass-agent/commit/775a9ab64ce0c01747a930311a2231b01e10d325))
+* **linux:** clean up active app D-Bus watch ([6380b6b](https://github.com/jaynis/go-hass-agent/commit/6380b6bfc81a1b2c3f9b8174701bfe61639368cf))
+* **linux:** clean up D-Bus connection and signals on shutdown ([c815184](https://github.com/jaynis/go-hass-agent/commit/c815184b1cfd6b557936107563344a5a586800a4))
+* **linux:** clean up location sensor D-Bus watch ([6fad74e](https://github.com/jaynis/go-hass-agent/commit/6fad74eb8469753b2cc4bce5149ce1894ce007ef))
+* **linux:** clean up users D-Bus watch ([fd14a16](https://github.com/jaynis/go-hass-agent/commit/fd14a1675469662ea35a49adf7162561c1e0c23c))
+* **linux:** correct batteryLevels and batteryStates values for batterySensor ([2c53790](https://github.com/jaynis/go-hass-agent/commit/2c53790465f641c7efb44f1fa3f4f334630aa212))
+* **linux:** correct tracking of user sessions created/removed ([7f7e01b](https://github.com/jaynis/go-hass-agent/commit/7f7e01bce7d17616f5ce10f24e6775f9b1cef060))
+* **linux:** ensure initially added battery devices are tracked correctly ([20c2574](https://github.com/jaynis/go-hass-agent/commit/20c2574dd9b1a80b51f0e189cbe57369c0b78085))
+* **linux:** ensure power state is sent immediately ([70d60d5](https://github.com/jaynis/go-hass-agent/commit/70d60d5d758383ad1a56a64824a3ac4aeff1eb10))
+* **linux:** ensure type assertion is checked ([dc312f5](https://github.com/jaynis/go-hass-agent/commit/dc312f52259c9732fe2f34f9f378fee569b1b9c2))
+* **linux:** fix name of power state sensor in warning message ([136da9c](https://github.com/jaynis/go-hass-agent/commit/136da9cb0ddd383dad35626e69718f5c2189aa2d))
+* **linux:** follow android app and treat wifi sensors as diagnostics ([f06cbc4](https://github.com/jaynis/go-hass-agent/commit/f06cbc43ff86ee224985a058c80bdaf2369fb10f))
+* **linux:** handle no address for network connection sensor ([254ad19](https://github.com/jaynis/go-hass-agent/commit/254ad19a0a0dad43a351b27c34dbfaceceb604cd))
+* **linux:** improved network connection sensor detection and error handling ([f456b55](https://github.com/jaynis/go-hass-agent/commit/f456b55dc2cd425a40489125e79c7a15e15b6e0e))
+* **linux:** more type assertion checks ([46ab539](https://github.com/jaynis/go-hass-agent/commit/46ab5396e763d43f99aee30a6ba403f8ae625a2d))
+* **linux:** network connection sensor state should be diagnostic ([3b42944](https://github.com/jaynis/go-hass-agent/commit/3b429440e2241cee76903396c8726113cdd9cd39))
+* **linux:** portal detection ([e3b2606](https://github.com/jaynis/go-hass-agent/commit/e3b2606cdad6fa8f94712f8b9f19da8a5197f35f))
+* **linux:** power profile sensor reporting incorrect state ([5591998](https://github.com/jaynis/go-hass-agent/commit/55919983626dd1fa18e36f3384689b9eff5e59dc))
+* **linux:** protect against divide by zero in networkStatsSensor ([b79d0b2](https://github.com/jaynis/go-hass-agent/commit/b79d0b2f285fcfec4a03176b19400f49fd4e0d90))
+* **linux:** protect against error in type assertion for batterySensor ([8eff883](https://github.com/jaynis/go-hass-agent/commit/8eff8830ef4ce8e2c53145087c19821f63a96d6d))
+* **linux:** protect against nil value panic in batterySensor ([94af4da](https://github.com/jaynis/go-hass-agent/commit/94af4daca7ebe4c71a2dffde05480b8618ccc8ad))
+* **linux:** protect against potential map read/write race condition ([26be3af](https://github.com/jaynis/go-hass-agent/commit/26be3afd63831d618cd2c28507940afeade05353))
+* **linux:** protect type assertion for username list generation ([3a3e4af](https://github.com/jaynis/go-hass-agent/commit/3a3e4af69a236d4dd522bf04f93bebba8e7e7e2d))
+* **linux:** protect type assertions for wifi sensors ([c3e85ac](https://github.com/jaynis/go-hass-agent/commit/c3e85acd29289c01d0c23c7d2a14dd3bd94d79c4))
+* **linux:** remove call trace on log message ([a79058b](https://github.com/jaynis/go-hass-agent/commit/a79058bbf2045b5957e72a0028f5d82bc2db5e7f))
+* **linux:** return a nil dbus.Variant if prop not retrieved ([6db5c79](https://github.com/jaynis/go-hass-agent/commit/6db5c79a95c2e6dce26407d3f2cd93e37a5c05a5))
+* **linux:** rework batterySensor code to reduce complexity and improve safety ([a1349a6](https://github.com/jaynis/go-hass-agent/commit/a1349a6db07bbc15f1b7b623ac254290ae594273))
+* **linux:** screen lock sensor improved logic and error checking ([dfa1123](https://github.com/jaynis/go-hass-agent/commit/dfa112390d63e095bc6efdd741d3848be33ba860))
+* **linux:** screen lock sensor type casting issue ([a975f04](https://github.com/jaynis/go-hass-agent/commit/a975f04edc23f483313caf7dfac34b47a2b342d1))
+* **linux:** set values of power management sensors on startup ([7ac5304](https://github.com/jaynis/go-hass-agent/commit/7ac53045703e4681be74f6df44d5300a9053b7b6))
+* **linux:** simplify watch for screen lock sensor ([d7c4399](https://github.com/jaynis/go-hass-agent/commit/d7c43999b7955f4cccb25964dd95c4f7c359ba45))
+* **linux:** type assertion check for generating power state icon ([f1f0099](https://github.com/jaynis/go-hass-agent/commit/f1f0099ea9dada78135051a519dcab1b0c7d0851))
+* **linux:** type assertion check for generating screen lock icon ([50cd304](https://github.com/jaynis/go-hass-agent/commit/50cd3042c0b6dc50dd49c57d36e3d4ec585c68d0))
+* **linux:** variable shadows import ([860b6a8](https://github.com/jaynis/go-hass-agent/commit/860b6a8a12d870da1cf773d69ffcc1832e3dea69))
+* **tracker/registry:** better type safety ([ce1afe1](https://github.com/jaynis/go-hass-agent/commit/ce1afe10e6adbf52a288daa7c39383773a94c08c))
+* **tracker:** more flexible channel return ([5b890f1](https://github.com/jaynis/go-hass-agent/commit/5b890f167b472bd8280b8d90079fa4c1e2f28e1b))
+
+
+### Performance Improvements
+
+* **agent:** :zap: improve reliability and error handling of websocket connection ([d1968d7](https://github.com/jaynis/go-hass-agent/commit/d1968d74148957aff84612d012a765723cc201da))
+* **hass:** :sparkles: rework request error handling ([1d9d372](https://github.com/jaynis/go-hass-agent/commit/1d9d372df059975cfa4b567c1087e100914f2197))
+* **hass:** :zap: remove unneccesary goroutine usage for ExecuteRequest ([8505455](https://github.com/jaynis/go-hass-agent/commit/8505455ab4f059bce0fa03d3684925516bf45223))
+
+
+### Miscellaneous Chores
+
+* release 5.1.2 ([abf0a85](https://github.com/jaynis/go-hass-agent/commit/abf0a850bf7f200a63d249e14a6acb697d575dfd))
+
+
+### Code Refactoring
+
+* **agent,linux:** return a channel for sensor updates from updater funcs ([c64c369](https://github.com/jaynis/go-hass-agent/commit/c64c36959b05925549520d533faaf9731b3dbb96))
+* major requests refactor ([24097f3](https://github.com/jaynis/go-hass-agent/commit/24097f34c040dc5a79b78eba727557917da39419))
+
 ## [7.2.0](https://github.com/joshuar/go-hass-agent/compare/v7.1.0...v7.2.0) (2024-03-03)
 
 
